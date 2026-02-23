@@ -1,6 +1,6 @@
 # Pínghéng (平衡, CryptoRebalance)
 
-Pínghéng, 平衡 in Chinese, is a native Android application designed to automate portfolio rebalancing across multiple cryptocurrency assets. It replicates the logic of the "Crypto Trading v3" spreadsheet, allowing users to maintain a target allocation for their crypto holdings.
+Pínghéng, 平衡 in Chinese, is a native Android application designed to automate portfolio rebalancing across multiple cryptocurrency assets. It replicates the logic of the [**"Crypto Trading v3"**](https://docs.google.com/spreadsheets/d/1TPZpIFP1YSo7a7DeSaFFYITx1WHFc7Ic8Sk8rNJpfEY/edit?usp=sharing&usp=drivesdk) spreadsheet, allowing users to maintain a target allocation for their crypto holdings.
 
 ## Features
 
