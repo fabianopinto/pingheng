@@ -47,7 +47,7 @@ fun BalanceScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /* TODO: Execute trades */ },
+                onClick = { viewModel.executeRebalancing() },
                 icon = { Icon(Icons.Default.Settings, "Execute") },
                 text = { Text("Execute") },
             )

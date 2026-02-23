@@ -59,6 +59,12 @@ class AssetViewModel @Inject constructor(
         }
     }
 
+    fun executeRebalancing() {
+        viewModelScope.launch {
+            repository.executeRebalancing()
+        }
+    }
+
     private fun AssetEntity.toDomainModel(): Asset {
         return Asset(
             symbol = symbol,
