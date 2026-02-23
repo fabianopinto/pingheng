@@ -65,6 +65,10 @@ class AssetViewModel @Inject constructor(
         }
     }
 
+    fun saveCredentials(apiKey: String, apiSecret: String) {
+        repository.saveCredentials(apiKey, apiSecret)
+    }
+
     private fun AssetEntity.toDomainModel(): Asset {
         return Asset(
             symbol = symbol,

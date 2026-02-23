@@ -8,13 +8,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fabianopinto.pingheng.data.local.PreferenceManager
 import com.fabianopinto.pingheng.ui.BalanceScreen
+import com.fabianopinto.pingheng.ui.CredentialsScreen
 import com.fabianopinto.pingheng.ui.SetupScreen
 import com.fabianopinto.pingheng.ui.theme.PínghéngTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,6 +38,13 @@ class MainActivity : ComponentActivity() {
                     composable("setup") {
                         SetupScreen(
                             viewModel = hiltViewModel(),
+                            navController = navController,
+                            onNavigateToCredentials = { navController.navigate("credentials") }
+                        )
+                    }
+                    composable("credentials") {
+                        CredentialsScreen(
+                            preferenceManager = preferenceManager,
                             navController = navController
                         )
                     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,7 +20,8 @@ import androidx.navigation.NavController
 @Composable
 fun SetupScreen(
     viewModel: AssetViewModel,
-    navController: NavController
+    navController: NavController,
+    onNavigateToCredentials: () -> Unit
 ) {
     var symbol by remember { mutableStateOf("") }
     var target by remember { mutableStateOf("") }
@@ -32,6 +34,11 @@ fun SetupScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToCredentials) {
+                        Icon(Icons.Default.Lock, contentDescription = "API Credentials")
                     }
                 }
             )

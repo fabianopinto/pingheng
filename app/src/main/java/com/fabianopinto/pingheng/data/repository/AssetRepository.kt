@@ -2,29 +2,20 @@ package com.fabianopinto.pingheng.data.repository
 
 import com.fabianopinto.pingheng.data.local.AssetDao
 import com.fabianopinto.pingheng.data.local.AssetEntity
+import com.fabianopinto.pingheng.data.local.PreferenceManager
 import com.fabianopinto.pingheng.data.model.Asset
 import com.fabianopinto.pingheng.data.remote.BinanceApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.abs
 
 @Singleton
 class AssetRepository @Inject constructor(
     private val assetDao: AssetDao,
-    private val binanceApi: BinanceApi
+    private val binanceApi: BinanceApi,
+    private val preferenceManager: PreferenceManager
 ) {
     val allAssets: Flow<List<AssetEntity>> = assetDao.getAllAssets()
-
-    // These should be securely stored, e.g., in EncryptedSharedPreferences or DataStore
-    private var apiKey: String = ""
-    private var apiSecret: String = ""
-
-    fun setCredentials(key: String, secret: String) {
-        apiKey = key
-        apiSecret = secret
-    }
 
     suspend fun addAsset(asset: AssetEntity) {
         assetDao.insertAssets(listOf(asset))
@@ -45,8 +36,6 @@ class AssetRepository @Inject constructor(
                 val pairSymbol = "${asset.symbol}${asset.pairWith}"
                 val newPrice = priceMap[pairSymbol] ?: 0.0
 
-                // In a real app, we'd also fetch the balance from Binance API here.
-                // For this scaffolding, we update the price.
                 assetDao.updateBalanceAndPrice(asset.symbol, asset.currentBalance, newPrice)
             }
         } catch (e: Exception) {
@@ -55,7 +44,13 @@ class AssetRepository @Inject constructor(
     }
 
     suspend fun executeRebalancing() {
-        if (apiKey.isBlank() || apiSecret.isBlank()) return
+        val apiKey = preferenceManager.getApiKey()
+        val apiSecret = preferenceManager.getApiSecret()
+
+        if (apiKey.isBlank() || apiSecret.isBlank()) {
+            println("API credentials are not set.")
+            return
+        }
 
         val currentEntities = assetDao.getAllAssetsList()
         val totalValuation = currentEntities.sumOf { it.currentBalance * it.currentPrice }
@@ -74,20 +69,22 @@ class AssetRepository @Inject constructor(
                         else -> return@forEach
                     }
 
-                    // Simple Market Order implementation
-                    // Note: signature calculation is missing here - required for Binance API
                     val timestamp = System.currentTimeMillis()
                     val symbol = "${asset.symbol}${asset.pairWith}"
 
-                    // binanceApi.postOrder(apiKey, symbol, side, "MARKET", recommendation.quantity.toString(), timestamp, "SIGNATURE")
-
+                    // Placeholder for signature calculation
                     println("Executing $side ${recommendation.quantity} of ${asset.symbol}")
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
         refreshData()
+    }
+
+    fun saveCredentials(apiKey: String, apiSecret: String) {
+        preferenceManager.saveCredentials(apiKey, apiSecret)
     }
 
     private fun AssetEntity.toDomainModel(): Asset {
