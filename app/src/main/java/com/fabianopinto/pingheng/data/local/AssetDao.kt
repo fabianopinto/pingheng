@@ -11,6 +11,9 @@ interface AssetDao {
     @Query("SELECT * FROM assets")
     fun getAllAssets(): Flow<List<AssetEntity>>
 
+    @Query("SELECT * FROM assets")
+    suspend fun getAllAssetsList(): List<AssetEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAssets(assets: List<AssetEntity>)
 
